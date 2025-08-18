@@ -1,5 +1,5 @@
 # Estufa-Monitor-ESP32-DHT11-Web-UI-
-Sistema de automação simples para cultivo usando ESP32
+Sistema de automação simples para cultivo
 
 <img width="1088" height="889" alt="esquema eletrico" src="https://github.com/user-attachments/assets/e713ff0c-2f34-4d9e-8528-11f5400b55d1" />
 
@@ -12,9 +12,12 @@ Válvula solenóide elétrica 220v,
 Bomba De Água Elétrica Alta Pressão Diafragma 12V, 
 Power Cooling Case Fan 12V, 
 Sensor capacitivo de nível de água sem contato 3.3v-5v, 
-2x Lâmpada Full Espectro 300 leds AC85V-265V, 
-UI web (porta 81) para status em tempo real, 
+2x Lâmpada Full Espectro 300 leds AC85V-265V,  
 Persistência do estado (NVS + NTP) para retomar “de onde parou” após queda de energia.
+
+🧩 Software
+
+<img width="1908" height="645" alt="Captura de tela 2025-08-18 082147" src="https://github.com/user-attachments/assets/2c60f169-fcf2-471f-b511-797c941a36c7" />
 
 ⚙️ Funcionalidades
 
