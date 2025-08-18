@@ -4,6 +4,7 @@ Sistema de automação simples para cultivo
 <img width="1088" height="889" alt="esquema eletrico" src="https://github.com/user-attachments/assets/e713ff0c-2f34-4d9e-8528-11f5400b55d1" />
 
 🧩 Hardware
+
 ESP-32S, 
 Módulo rele 8 canais 5V, 
 Sensor de temperatura DHT11 3.3v-5v, 
