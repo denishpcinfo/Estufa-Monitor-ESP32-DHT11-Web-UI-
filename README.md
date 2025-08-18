@@ -1,6 +1,10 @@
 # Estufa-Monitor-ESP32-DHT11-Web-UI-
 Sistema de automação simples para cultivo usando ESP32
 
+<img width="1088" height="889" alt="esquema eletrico" src="https://github.com/user-attachments/assets/e713ff0c-2f34-4d9e-8528-11f5400b55d1" />
+
+
+
 leitura de temperatura/umidade (DHT11),
 
 controle de luz, bomba, ventilador, exaustor e válvulas,
