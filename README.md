@@ -12,10 +12,9 @@ Válvula solenóide elétrica de três fios, dois controles 220v,
 Bomba De Água Elétrica, Alta Pressão, Diafragma 12V, 
 Power Cooling Case Fan 12V, 
 Sensor capacitivo de nível de água sem contato, 3.3v-5v, 
-2x Lâmpada Full Espectro 300 leds AC85V-265V.
-
-
-leitura de temperatura/umidade (DHT11), controle de luz, bomba, ventilador, exaustor e válvulas, UI web (porta 81) para status em tempo real, persistência opcional do estado (NVS + NTP) para retomar “de onde parou” após queda de energia.
+2x Lâmpada Full Espectro 300 leds AC85V-265V, 
+UI web (porta 81) para status em tempo real, 
+Persistência do estado (NVS + NTP) para retomar “de onde parou” após queda de energia.
 
 ⚙️ Funcionalidades
 
