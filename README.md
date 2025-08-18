@@ -3,7 +3,7 @@ Sistema de automação simples para cultivo usando ESP32
 
 <img width="1088" height="889" alt="esquema eletrico" src="https://github.com/user-attachments/assets/e713ff0c-2f34-4d9e-8528-11f5400b55d1" />
 
-Itens:
+🧩 Hardware
 ESP-32S, 
 Módulo rele 8 canais 5V, 
 Sensor de temperatura DHT11 3.3v-5v, 
@@ -39,8 +39,6 @@ Usa NTP para reconstruir o “tempo perdido” enquanto estava sem energia.
 Eventos críticos (troca de luz, início/fim irrigação): no máximo 1 gravação / minuto.
 
 Demais mudanças: no máximo 1 gravação / 15 minutos.
-
-🧩 Hardware / Ligações (padrão do código) Função Pino ESP32 DHT11 (DATA) 13 Sensor nível alto 34 (entrada) Bomba (relé) 14 Ventilador (relé) 27 Válvula fechar 26 Válvula abrir 25 Exaustor (relé) 33 Luz (relé) 32
 
 🛠️ Dependências
 
