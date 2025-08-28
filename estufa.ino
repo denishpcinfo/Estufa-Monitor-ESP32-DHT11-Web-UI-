@@ -35,7 +35,7 @@ const bool ACT_LOW_luz        = false;
 
 const float temperaturaMaxima = 25.0;
 const float umidadeLimite = 30.0;
-const unsigned long intervaloEntreIrrigacoes = 24UL * 60 * 60 * 1000;
+const unsigned long intervaloEntreIrrigacoes = 48UL * 60 * 60 * 1000;
 const unsigned long tempoLuzOn  = 18UL * 60 * 60 * 1000;
 const unsigned long tempoLuzOff = 6UL  * 60 * 60 * 1000;
 
@@ -59,6 +59,30 @@ inline void setOff(int pin, bool activeLow){ digitalWrite(pin, activeLow ? HIGH 
 inline bool isOn(int pin, bool activeLow){
   int v = digitalRead(pin);
   return activeLow ? (v == LOW) : (v == HIGH);
+}
+
+void WiFiEventHandler(WiFiEvent_t event) {
+  switch (event) {
+    case ARDUINO_EVENT_WIFI_STA_START:
+      Serial.println(F("[WiFi] STA_START"));
+      break;
+
+    case ARDUINO_EVENT_WIFI_STA_CONNECTED:
+      Serial.println(F("[WiFi] Conectado ao AP (sem IP ainda)"));
+      break;
+
+    case ARDUINO_EVENT_WIFI_STA_GOT_IP:
+      Serial.print(F("[WiFi] IP obtido: "));
+      Serial.println(WiFi.localIP());
+      break;
+
+    case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
+      Serial.println(F("[WiFi] Desconectado do AP, tentando reconectar..."));
+      break;
+
+    default:
+      break;
+  }
 }
 
 #if defined(USE_PERSIST)
@@ -92,6 +116,7 @@ void saveSnap(){
 void markDirty(){ 
   dirtySnap = true;
 }
+
 void markCriticalDirty(){ 
   dirtySnap = true;
   dirtyCrit = true;
@@ -118,6 +143,7 @@ void waitForTime(unsigned long ms=5000){
   unsigned long start=millis(); struct tm t;
   while (millis()-start < ms) { if (getLocalTime(&t)) return; delay(100); }
 }
+
 uint32_t nowSec(){
   time_t n = time(nullptr);
   return (n > 1700000000) ? (uint32_t)n : 0;
@@ -432,6 +458,7 @@ void controleNivelAgua() {
 void setup() {
   Serial.begin(115200);
 
+  WiFi.onEvent(WiFiEventHandler);
   pinMode(sensorNivelAlto, INPUT);
   pinMode(releBomba, OUTPUT);
   pinMode(releVentilador, OUTPUT);
