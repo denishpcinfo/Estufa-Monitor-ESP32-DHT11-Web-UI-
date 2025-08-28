@@ -24,7 +24,7 @@ Persistência do estado (NVS + NTP) para retomar “de onde parou” após queda
 
 Ciclos da luz: 18h ON / 6h OFF.
 
-Irrigação: 1 ciclo a cada 24h, com duração de 10 s.
+Irrigação: 1 ciclo a cada 48h, com duração de 10 s.
 
 Controle térmico/umidade: liga/desliga ventilador/exaustor com cooldown de 5 min.
 
