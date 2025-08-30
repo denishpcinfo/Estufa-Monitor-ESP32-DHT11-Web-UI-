@@ -35,7 +35,7 @@ const bool ACT_LOW_luz        = false;
 
 const float temperaturaMaxima = 25.0;
 const float umidadeLimite = 30.0;
-const unsigned long intervaloEntreIrrigacoes = 48UL * 60 * 60 * 1000;
+const unsigned long intervaloEntreIrrigacoes = 72UL * 60 * 60 * 1000;
 const unsigned long tempoLuzOn  = 18UL * 60 * 60 * 1000;
 const unsigned long tempoLuzOff = 6UL  * 60 * 60 * 1000;
 
