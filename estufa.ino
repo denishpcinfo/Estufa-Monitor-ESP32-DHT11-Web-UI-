@@ -39,7 +39,7 @@ const unsigned long intervaloEntreIrrigacoes = 72UL * 60 * 60 * 1000;
 const unsigned long tempoLuzOn  = 18UL * 60 * 60 * 1000;
 const unsigned long tempoLuzOff = 6UL  * 60 * 60 * 1000;
 
-const unsigned long duracaoIrrigacaoMs = 10UL * 1000;
+const unsigned long duracaoIrrigacaoMs = 5UL * 1000;
 bool irrigando = false;
 unsigned long inicioIrrigacao = 0;
 unsigned long tempoUltimaIrrigacao = 0;
