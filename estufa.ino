@@ -35,14 +35,15 @@ const bool ACT_LOW_luz        = false;
 
 const float temperaturaMaxima = 25.0;
 const float umidadeLimite = 30.0;
-const unsigned long intervaloEntreIrrigacoes = 72UL * 60 * 60 * 1000;
-const unsigned long tempoLuzOn  = 18UL * 60 * 60 * 1000;
-const unsigned long tempoLuzOff = 6UL  * 60 * 60 * 1000;
 
-const unsigned long duracaoIrrigacaoMs = 5UL * 1000;
+const unsigned long intervaloEntreIrrigacoes = 72UL * 60 * 60 * 1000;
+const unsigned long tempoLuzOn  = 18UL * 60 * 60 * 1000;              
+const unsigned long tempoLuzOff = 6UL  * 60 * 60 * 1000;              
+const unsigned long duracaoIrrigacaoMs = 5UL * 1000;                  
+
 bool irrigando = false;
 unsigned long inicioIrrigacao = 0;
-unsigned long tempoUltimaIrrigacao = 0;
+unsigned long tempoUltimaIrrigacao = 0;  // marco para cálculo da próxima irrigação
 unsigned long tempoUltimaTrocaLuz  = 0;
 bool luzLigada = true;
 bool exaustorLigado = true;
@@ -66,20 +67,16 @@ void WiFiEventHandler(WiFiEvent_t event) {
     case ARDUINO_EVENT_WIFI_STA_START:
       Serial.println(F("[WiFi] STA_START"));
       break;
-
     case ARDUINO_EVENT_WIFI_STA_CONNECTED:
       Serial.println(F("[WiFi] Conectado ao AP (sem IP ainda)"));
       break;
-
     case ARDUINO_EVENT_WIFI_STA_GOT_IP:
       Serial.print(F("[WiFi] IP obtido: "));
       Serial.println(WiFi.localIP());
       break;
-
     case ARDUINO_EVENT_WIFI_STA_DISCONNECTED:
       Serial.println(F("[WiFi] Desconectado do AP, tentando reconectar..."));
       break;
-
     default:
       break;
   }
@@ -104,8 +101,8 @@ bool dirtyCrit = false;
 unsigned long lastPersistMs    = 0;
 unsigned long lastCriticalSave = 0; 
 
-const unsigned long PERSIST_INTERVAL_MS  = 15UL * 60UL * 1000UL; 
-const unsigned long CRITICAL_INTERVAL_MS = 1UL  * 60UL * 1000UL; 
+const unsigned long PERSIST_INTERVAL_MS  = 15UL * 60UL * 1000UL;
+const unsigned long CRITICAL_INTERVAL_MS = 5000UL;              
 
 void saveSnap(){
   prefs.putBytes("snap", &snap, sizeof(snap));
@@ -152,29 +149,41 @@ uint32_t nowSec(){
 void trocaLuz(bool ligar){
   if (ligar){ setOn(luz1, ACT_LOW_luz); luzLigada = true; }
   else      { setOff(luz1, ACT_LOW_luz); luzLigada = false; }
+
   tempoUltimaTrocaLuz = millis();
+
   snap.luzLigada = luzLigada;
   uint32_t n = nowSec(); if (n) snap.lastLightSwitchSec = n;
-  markCriticalDirty(); 
+
+  dirtySnap = true; dirtyCrit = true;
+  saveSnap();
 }
 
 void startIrrigacao(){
   setOn(releBomba, ACT_LOW_bomba);
   irrigando = true;
   inicioIrrigacao = millis();
-  tempoUltimaIrrigacao = millis();
+
   snap.irrigando = true;
   uint32_t n = nowSec(); if (n) snap.lastIrrigSec = n;
   snap.irrigRemainMs = duracaoIrrigacaoMs;
-  markCriticalDirty(); 
+
+  dirtySnap = true; dirtyCrit = true;
+  saveSnap();
 }
 
 void stopIrrigacao(){
   setOff(releBomba, ACT_LOW_bomba);
   irrigando = false;
+
+  tempoUltimaIrrigacao = millis();
+
   snap.irrigando = false;
   snap.irrigRemainMs = 0;
-  markCriticalDirty();
+  uint32_t n = nowSec(); if (n) snap.lastIrrigSec = n;
+
+  dirtySnap = true; dirtyCrit = true;
+  saveSnap();
 }
 
 void tickIrrigacaoRemain(){
@@ -205,26 +214,36 @@ void reconstruirEstadosPosFalha(){
   }
 
   if (snap.irrigando){
+    
     if (n && snap.lastIrrigSec){
       uint64_t deltaMs = (uint64_t)(n - snap.lastIrrigSec) * 1000ULL;
-      if (deltaMs >= duracaoIrrigacaoMs){ stopIrrigacao(); }
-      else {
+      if (deltaMs >= duracaoIrrigacaoMs){
+        
+        stopIrrigacao();
+      } else {
+        
         uint32_t restante = (uint32_t)(duracaoIrrigacaoMs - deltaMs);
-        startIrrigacao();
+        startIrrigacao(); // liga de novo
+        
         inicioIrrigacao = millis() - (duracaoIrrigacaoMs - restante);
+
         if (snap.irrigRemainMs != restante) { snap.irrigRemainMs = restante; markDirty(); }
       }
     } else {
+     
       stopIrrigacao();
     }
   } else {
+  
     if (n && snap.lastIrrigSec){
+      
       uint64_t deltaMs64 = (uint64_t)(n - snap.lastIrrigSec) * 1000ULL;
       unsigned long deltaMs32 = (deltaMs64 > 0xFFFFFFFFULL) ? 0xFFFFFFFFUL : (unsigned long)deltaMs64;
       tempoUltimaIrrigacao = millis() - deltaMs32;
     }
   }
 
+  
   if (snap.exaustorLigado){
     setOn(releExaustor,   ACT_LOW_exaustor);
     setOn(releVentilador, ACT_LOW_ventilador);
@@ -235,7 +254,7 @@ void reconstruirEstadosPosFalha(){
     exaustorLigado = false;
   }
 }
-#endif 
+#endif
 
 const char PAGE[] PROGMEM = R"HTML(
 <!doctype html><html><head><meta charset="utf-8"/>
@@ -333,6 +352,7 @@ void handleStatus(){
   json += "\"luz\":"      + String(isOn(luz1,           ACT_LOW_luz)        ? "true":"false") + ",";
   json += "\"bomba\":"    + String(isOn(releBomba,      ACT_LOW_bomba)      ? "true":"false") + ",";
   json += "\"vent\":"     + String(isOn(releVentilador, ACT_LOW_ventilador) ? "true":"false") + ",";
+  // valvula: true = abrindo, false = fechando (visão UI)
   json += "\"valvula\":"  + String(isOn(torneiraFechar, ACT_LOW_valvFechar) ? "false":"true") + ",";
   json += "\"exaustor\":" + String(isOn(releExaustor,   ACT_LOW_exaustor)   ? "true":"false");
   json += "},";
@@ -376,7 +396,7 @@ void controleIrrigacao() {
       setOn(releBomba, ACT_LOW_bomba);
       irrigando = true;
       inicioIrrigacao = now;
-      tempoUltimaIrrigacao = now;
+      
 #endif
     }
   } else {
@@ -386,6 +406,7 @@ void controleIrrigacao() {
 #else
       setOff(releBomba, ACT_LOW_bomba);
       irrigando = false;
+      tempoUltimaIrrigacao = now; // contar a partir do FIM
 #endif
     }
   }
@@ -394,7 +415,7 @@ void controleIrrigacao() {
 void controleTemperatura() {
   static unsigned long lastRun = 0;
   unsigned long now = millis();
-  const unsigned long COOLDOWN = 300000UL;
+  const unsigned long COOLDOWN = 300000UL; // 5 min
 
   if (lastRun == 0) lastRun = now - COOLDOWN;
   if (now - lastRun < COOLDOWN) return;
@@ -421,7 +442,7 @@ void controleTemperatura() {
 void controleUmidadeExaustor() {
   static unsigned long lastRun = 0;
   unsigned long now = millis();
-  const unsigned long COOLDOWN = 300000UL;
+  const unsigned long COOLDOWN = 300000UL; // 5 min
 
   if (lastRun == 0) lastRun = now - COOLDOWN;
   if (now - lastRun < COOLDOWN) return;
@@ -454,6 +475,7 @@ void controleNivelAgua() {
     setOff(torneiraAbrir,  ACT_LOW_valvAbrir);
   }
 }
+
 
 void setup() {
   Serial.begin(115200);
