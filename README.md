@@ -1,7 +1,7 @@
 # Estufa-Monitor-ESP32-DHT11-Web-UI-
 Sistema de automação simples para cultivo
 
-<img width="1088" height="889" alt="esquema eletrico" src="https://github.com/user-attachments/assets/e713ff0c-2f34-4d9e-8528-11f5400b55d1" />
+<img width="1276" height="776" alt="Captura de tela de 2026-01-18 21-07-18" src="https://github.com/user-attachments/assets/6776d20b-9fe5-4a4a-adfd-f250eefa3acb" />
 
 🧩 Hardware
 
