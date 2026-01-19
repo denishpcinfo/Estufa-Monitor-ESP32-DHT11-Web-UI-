@@ -186,3 +186,7 @@ prefs.end();
 Este projeto prioriza robustez, segurança elétrica e comportamento previsível.
 Nenhuma ação crítica é executada com sensores inválidos ou estados inconsistentes.
 
+
+
+### 📱 Próxima fase, criar um versão com flutter!
+
