@@ -23,6 +23,9 @@ Sistema embarcado para automação de estufa / grow indoor utilizando **ESP32**,
 
 ## ⚙️ Funcionalidades
 
+<img width="1906" height="897" alt="Captura de tela 2026-01-18 212243" src="https://github.com/user-attachments/assets/b8e035c6-bfc6-44b1-9498-c3c266e66e02" />
+
+
 ### 💡 Controle de Luz
 - Ciclo **18h ON / 6h OFF**
 - Persistência do estado usando **NVS (flash)**
