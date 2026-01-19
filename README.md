@@ -23,9 +23,6 @@ Sistema embarcado para automação de estufa / grow indoor utilizando **ESP32**,
 
 ## ⚙️ Funcionalidades
 
-<img width="1906" height="897" alt="Captura de tela 2026-01-18 212243" src="https://github.com/user-attachments/assets/b8e035c6-bfc6-44b1-9498-c3c266e66e02" />
-
-
 ### 💡 Controle de Luz
 - Ciclo **18h ON / 6h OFF**
 - Persistência do estado usando **NVS (flash)**
@@ -69,6 +66,8 @@ Sistema embarcado para automação de estufa / grow indoor utilizando **ESP32**,
 
 ## 🌐 Interface Web (HTTP – porta 81)
 
+<img width="1906" height="897" alt="Captura de tela 2026-01-18 212243" src="https://github.com/user-attachments/assets/b8e035c6-bfc6-44b1-9498-c3c266e66e02" />
+
 ### Endpoints
 
 - **GET /**  
@@ -105,7 +104,9 @@ Sistema embarcado para automação de estufa / grow indoor utilizando **ESP32**,
     "lightMs": 123456
   }
 }
-💾 Persistência (NVS – Flash)
+```
+
+### 💾 Persistência (NVS – Flash)
 O que é persistido
 Estado da luz (ON / OFF)
 
@@ -124,7 +125,7 @@ Não utiliza NTP
 
 Modelo simples, previsível e seguro
 
-🛠️ Dependências
+### 🛠️ Dependências
 Plataforma
 Arduino Core para ESP32
 
@@ -139,7 +140,7 @@ Preferences.h
 
 WiFiClientSecure.h
 
-🔧 Configuração rápida
+### 🔧 Configuração rápida
 No início do código:
 
 const char* SSID     = "SEU_WIFI";
@@ -156,7 +157,8 @@ const unsigned long MIN_INTERVALO_IRRIG_SOLO_MS = 6UL * 60UL * 60UL * 1000UL;
 // Solo (calibração)
 int SOLO_SECO    = 1427;
 int SOLO_MOLHADO = 1050;
-🧪 Como compilar e rodar
+
+### 🧪 Como compilar e rodar
 Abra o sketch no Arduino IDE ou PlatformIO
 
 Selecione a placa ESP32 correta
@@ -170,7 +172,8 @@ Anote o IP exibido
 Acesse no navegador:
 
 http://IP_DO_ESP32:81/
-🧹 Como limpar os dados salvos (NVS)
+
+### 🧹 Como limpar os dados salvos (NVS)
 Para resetar o estado persistido:
 
 prefs.begin("grow", false);
@@ -178,8 +181,7 @@ prefs.clear();
 prefs.end();
 ⚠️ Use uma vez, compile/suba e depois remova para não apagar sempre.
 
-
-📌 Observações finais
+### 📌 Observações finais
 
 Este projeto prioriza robustez, segurança elétrica e comportamento previsível.
 Nenhuma ação crítica é executada com sensores inválidos ou estados inconsistentes.
